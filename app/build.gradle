@@ -8,8 +8,8 @@ android {
         applicationId "com.wuxiao.yourday"
         minSdkVersion 14
         targetSdkVersion 24
-        versionCode 3
-        versionName "1.1.3"
+        versionCode 4
+        versionName "1.1.4"
     }
     buildTypes {
         release {
@@ -22,7 +22,9 @@ android {
         daoPackage 'com.wuxiao.yourday.gen'
         targetGenDir 'src/main/java'
     }
-
+    dataBinding {
+        enabled = true
+    }
 }
 
 

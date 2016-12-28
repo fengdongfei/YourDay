@@ -3,6 +3,7 @@ package com.wuxiao.yourday.diary;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -21,6 +22,7 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationListener;
 import com.wuxiao.yourday.R;
 import com.wuxiao.yourday.base.BaseFragment;
+import com.wuxiao.yourday.bean.DiaryTime;
 import com.wuxiao.yourday.bean.Note;
 import com.wuxiao.yourday.bean.WeatherItem;
 import com.wuxiao.yourday.common.AMapLocationManager;
@@ -31,6 +33,7 @@ import com.wuxiao.yourday.common.TimeUtils;
 import com.wuxiao.yourday.common.photo.PhotoPickerActivity;
 import com.wuxiao.yourday.common.popup.WeatherCallBack;
 import com.wuxiao.yourday.common.popup.WeatherPopup;
+import com.wuxiao.yourday.databinding.FragmentDiaryBinding;
 import com.wuxiao.yourday.viewpager.FragmentVisibilityListener;
 
 import java.text.SimpleDateFormat;
@@ -47,18 +50,11 @@ import static com.wuxiao.yourday.common.popup.WeatherPopup.getMenu;
  * Created by wuxiaojian on 16/12/6.
  */
 public class DiaryFragment extends BaseFragment<DiaryPresenter> implements DiaryContract.DiaryView, DatePickerDialog.OnDateSetListener, View.OnClickListener
-        , TimePickerDialog.OnTimeSetListener, WeatherCallBack, AMapLocationListener,FragmentVisibilityListener {
+        , TimePickerDialog.OnTimeSetListener, WeatherCallBack, AMapLocationListener, FragmentVisibilityListener {
     private Calendar calendar;
     private TimeUtils timeUtils;
     private SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-    private LinearLayout diary_time_information;
-    private LinearLayout diary_location_status;
-    private TextView diary_month;
-    private TextView diary_date;
-    private TextView diary_day;
-    private TextView diary_time;
     private LinearLayout buttom_toolbar;
-    private ImageView weather_icon;
     private ImageView photo;
     private ImageView location;
     private ImageView save;
@@ -71,7 +67,7 @@ public class DiaryFragment extends BaseFragment<DiaryPresenter> implements Diary
     private AMapLocationClient client;
     private TextView diary_location;
     private StringBuilder location1;
-    private LinearLayout note_rich_linear;
+    private FragmentDiaryBinding diaryBinding;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -88,40 +84,32 @@ public class DiaryFragment extends BaseFragment<DiaryPresenter> implements Diary
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View fragment = inflater.inflate(R.layout.fragment_diary, container, false);
-        diary_time_information = (LinearLayout) fragment.findViewById(R.id.diary_time_information);
-        diary_location_status = (LinearLayout) fragment.findViewById(R.id.diary_location_status);
-        diary_month = (TextView) fragment.findViewById(R.id.diary_month);
-        diary_date = (TextView) fragment.findViewById(R.id.diary_date);
-        diary_day = (TextView) fragment.findViewById(R.id.diary_day);
-        diary_time = (TextView) fragment.findViewById(R.id.diary_time);
-        note_rich = (RichEditText) fragment.findViewById(R.id.note_rich);
-        weather_icon = (ImageView) fragment.findViewById(R.id.weather_icon);
-        weather_icon.setOnClickListener(this);
-        weather_icon.setImageResource(weatherList.get(0).icon);
-        fragment.findViewById(R.id.save).setOnClickListener(this);
-        buttom_toolbar = (LinearLayout) fragment.findViewById(R.id.buttom_toolbar);
-        note_rich_linear = (LinearLayout) fragment.findViewById(R.id.note_rich_linear);
-        note_rich_linear.setOnClickListener(this);
+        diaryBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_diary, container, false);
+        diaryBinding.setCalendarColor(ThemeManager.getInstance().getThemeColor(getActivity()));
+        diaryBinding.setWeatherPosition(0);
+        note_rich = diaryBinding.noteRich;
+        diary_location = diaryBinding.diaryLocation;
+        buttom_toolbar = (LinearLayout) diaryBinding.getRoot().findViewById(R.id.buttom_toolbar);
         buttom_toolbar.setBackgroundColor(ThemeManager.getInstance().getThemeColor(getActivity()));
-        diary_time_information.setOnClickListener(this);
-        diary_time_information.setBackgroundColor(ThemeManager.getInstance().getThemeColor(getActivity()));
-        diary_location_status.setBackgroundColor(ThemeManager.getInstance().getThemeColor(getActivity()));
-        photo = (ImageView) fragment.findViewById(R.id.photo);
+        diary_location = (TextView) diaryBinding.getRoot().findViewById(R.id.diary_location);
+        diaryBinding.getRoot().findViewById(R.id.save).setOnClickListener(this);
+        diaryBinding.diaryTimeInformation.setOnClickListener(this);
+        diaryBinding.weatherIcon.setOnClickListener(this);
+        diaryBinding.noteRichLinear.setOnClickListener(this);
+        photo = (ImageView) diaryBinding.getRoot().findViewById(R.id.photo);
         photo.setVisibility(View.VISIBLE);
         photo.setOnClickListener(this);
-        location = (ImageView) fragment.findViewById(R.id.location);
-        diary_location = (TextView) fragment.findViewById(R.id.diary_location);
+        location = (ImageView) diaryBinding.getRoot().findViewById(R.id.location);
         location.setVisibility(View.VISIBLE);
         location.setOnClickListener(this);
-        save = (ImageView) fragment.findViewById(R.id.save);
+        save = (ImageView) diaryBinding.getRoot().findViewById(R.id.save);
         save.setVisibility(View.VISIBLE);
         save.setOnClickListener(this);
-        clear = (ImageView) fragment.findViewById(R.id.clear);
+        clear = (ImageView) diaryBinding.getRoot().findViewById(R.id.clear);
         clear.setVisibility(View.VISIBLE);
         clear.setOnClickListener(this);
         client.startLocation();
-        return fragment;
+        return diaryBinding.getRoot();
     }
 
 
@@ -141,10 +129,13 @@ public class DiaryFragment extends BaseFragment<DiaryPresenter> implements Diary
         if (updateCurrentTime) {
             calendar.setTimeInMillis(System.currentTimeMillis());
         }
-        diary_month.setText(timeUtils.getMonth()[calendar.get(Calendar.MONTH)]);
-        diary_date.setText(String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)));
-        diary_day.setText(timeUtils.getDays()[calendar.get(Calendar.DAY_OF_WEEK) - 1]);
-        diary_time.setText(sdf.format(calendar.getTime()));
+        DiaryTime diaryTime = new DiaryTime();
+        diaryTime.setMonth(timeUtils.getMonth()[calendar.get(Calendar.MONTH)]);
+        diaryTime.setTime(sdf.format(calendar.getTime()));
+        diaryTime.setDate(String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)));
+        diaryTime.setDay(timeUtils.getDays()[calendar.get(Calendar.DAY_OF_WEEK) - 1]);
+        diaryBinding.setDiaryTime(diaryTime);
+
     }
 
 
@@ -199,18 +190,18 @@ public class DiaryFragment extends BaseFragment<DiaryPresenter> implements Diary
                 String title = note_rich.getTitleData();
                 long createTime = calendar.getTimeInMillis();
                 if (!TextUtils.isEmpty(title) && !TextUtils.isEmpty(content)) {
-                    if (location1.toString()!=null) {
+                    if (location1.toString() != null) {
                         mPresenter.insertNote(title, content.toString(), createTime, weatherPisition, location1.toString());
-                    }else{
+                    } else {
                         mPresenter.insertNote(title, content.toString(), createTime, weatherPisition, "北京");
 
                     }
                     weatherPisition = 0;
-                    weather_icon.setImageResource(weatherList.get(0).icon);
-
+                    diaryBinding.setWeatherPosition(0);
                 } else {
                     Toast.makeText(getActivity(), getString(R.string.diary_empty), Toast.LENGTH_SHORT).show();
                 }
+
 
                 break;
             case R.id.photo:
@@ -220,7 +211,7 @@ public class DiaryFragment extends BaseFragment<DiaryPresenter> implements Diary
 
                 break;
             case R.id.clear:
-                weather_icon.setImageResource(weatherList.get(0).icon);
+                diaryBinding.setWeatherPosition(0);
                 saveStatus();
                 break;
             case R.id.weather_icon:
@@ -254,6 +245,8 @@ public class DiaryFragment extends BaseFragment<DiaryPresenter> implements Diary
 
     }
 
+
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode != getActivity().RESULT_OK) return;
@@ -267,10 +260,9 @@ public class DiaryFragment extends BaseFragment<DiaryPresenter> implements Diary
     @Override
     public void weatherPosition(int position) {
         weatherPisition = position;
-        weather_icon.setImageResource(weatherList.get(position).icon);
+        diaryBinding.setWeatherPosition(position);
         weatherPopup.dismiss();
     }
-
 
 
     @Override
@@ -285,9 +277,9 @@ public class DiaryFragment extends BaseFragment<DiaryPresenter> implements Diary
 
     @Override
     public void onFragmentVisible() {
-        if (location1!=null) {
+        if (location1 != null) {
             diary_location.setText(location1.toString());
-        }else{
+        } else {
             diary_location.setText("正在定位");
         }
     }

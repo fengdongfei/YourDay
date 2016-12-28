@@ -1,35 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/note_linear"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
-        android:id="@+id/note_title"
+    <data>
+
+        <import type="android.graphics.drawable.Drawable" />
+
+        <variable
+            name="setThemeBg"
+            type="Drawable" />
+
+        <variable
+            name="setTextColor"
+            type="int" />
+    </data>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="@android:color/white"
-        android:gravity="center"
-        android:paddingBottom="@dimen/y5"
-        android:text="@string/note_title"
-        android:textSize="@dimen/x30" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:setThemeBg="@{setThemeBg}">
 
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/note_list"
-            android:alpha="0.85"
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="@dimen/y100"/>
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@android:color/white"
+            android:gravity="center"
+            app:setTextColor="@{setTextColor}"
+            android:paddingBottom="@dimen/y5"
+            android:text="@string/note_title"
+            android:textSize="@dimen/x30" />
 
-        <include layout="@layout/bottom_toolbar" />
-    </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/note_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/y100"
+                android:alpha="0.85" />
+
+            <include layout="@layout/bottom_toolbar" />
+        </RelativeLayout>
 
 
-</LinearLayout>
+    </LinearLayout>
+</layout>

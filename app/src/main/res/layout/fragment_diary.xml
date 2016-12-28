@@ -1,153 +1,182 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/white">
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ScrollView
+    <data>
+
+
+        <variable
+            name="calendarColor"
+            type="int" />
+
+        <variable
+            name="weatherPosition"
+            type="int" />
+
+        <variable
+            name="diaryTime"
+            type="com.wuxiao.yourday.bean.DiaryTime"/>
+
+    </data>
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/buttom_toolbar"
-        android:fillViewport="true"
-        android:scrollbars="none">
+        android:background="@android:color/white">
 
-        <LinearLayout
-            android:id="@+id/diary_LinearLayout"
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/white"
-            android:orientation="vertical">
+            android:layout_above="@id/buttom_toolbar"
+            android:fillViewport="true"
+            android:scrollbars="none">
 
-            <View
-                android:id="@+id/shadow_view"
+            <LinearLayout
+                android:id="@+id/diary_LinearLayout"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/y2"
-                android:background="@drawable/shadow" />
+                android:layout_height="match_parent"
+                android:background="@android:color/white"
+                android:orientation="vertical">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                <View
+                    android:id="@+id/shadow_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/y2"
+                    android:background="@drawable/shadow" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:id="@+id/diary_time_information"
+                        app:setTheme="@{calendarColor}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/diary_month"
+                            android:text="@{diaryTime.month}"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/y20"
+                            android:textColor="@android:color/white"
+                            android:textSize="@dimen/y25" />
+
+                        <TextView
+                            android:id="@+id/diary_date"
+                            android:text="@{diaryTime.date}"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@android:color/white"
+                            android:textSize="@dimen/y100"
+                            android:textStyle="bold" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/diary_day"
+                                android:text="@{diaryTime.day}"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@android:color/white"
+                                android:textSize="@dimen/y25" />
+
+                            <TextView
+                                android:id="@+id/diary_time"
+                                android:text="@{diaryTime.time}"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/y20"
+                                android:textColor="@android:color/white"
+                                android:textSize="@dimen/y25" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <FrameLayout
+                        android:id="@+id/note_back"
+                        android:layout_width="@dimen/y80"
+                        android:layout_height="@dimen/y80"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:layout_width="@dimen/y40"
+                            android:layout_height="@dimen/y40"
+                            android:layout_marginRight="@dimen/y20"
+                            android:layout_marginTop="@dimen/y20"
+                            android:src="@drawable/icon_back" />
+
+                    </FrameLayout>
+
+                </RelativeLayout>
 
                 <LinearLayout
-                    android:id="@+id/diary_time_information"
+                    android:id="@+id/diary_location_status"
+                    app:setTheme="@{calendarColor}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:orientation="vertical">
+                    android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/diary_month"
+                        android:id="@+id/diary_location"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/y20"
+                        android:layout_marginBottom="@dimen/y10"
+                        android:layout_marginTop="@dimen/y10"
+                        android:text=""
                         android:textColor="@android:color/white"
-                        android:textSize="@dimen/y25" />
+                        android:textSize="@dimen/y27" />
 
-                    <TextView
-                        android:id="@+id/diary_date"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@android:color/white"
-                        android:textSize="@dimen/y100"
-                        android:textStyle="bold" />
+                    <ImageView
+                        android:id="@+id/weather_icon"
+                        android:layout_width="@dimen/x27"
+                        android:layout_height="@dimen/y60"
+                        app:setWeatherIcon="@{weatherPosition}"
+                        android:layout_marginLeft="@dimen/y10" />
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/diary_day"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="@android:color/white"
-                            android:textSize="@dimen/y25" />
-
-                        <TextView
-                            android:id="@+id/diary_time"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/y20"
-                            android:textColor="@android:color/white"
-                            android:textSize="@dimen/y25" />
-                    </LinearLayout>
 
                 </LinearLayout>
 
-                <FrameLayout
-                    android:id="@+id/note_back"
-                    android:visibility="gone"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_width="@dimen/y80"
-                    android:layout_height="@dimen/y80">
-                    <ImageView
-                        android:layout_marginRight="@dimen/y20"
-                        android:layout_marginTop="@dimen/y20"
-                        android:layout_width="@dimen/y40"
-                        android:layout_height="@dimen/y40"
-                        android:src="@drawable/icon_back" />
 
-                </FrameLayout>
+                <LinearLayout
+                    android:id="@+id/note_rich_linear"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
-            </RelativeLayout>
+                    <com.wuxiao.yourday.common.RichEditText.RichEditText
+                        android:id="@+id/note_rich"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#fff" />
 
-            <LinearLayout
-                android:id="@+id/diary_location_status"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/diary_location"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/y10"
-                    android:layout_marginTop="@dimen/y10"
-                    android:text=""
-                    android:textColor="@android:color/white"
-                    android:textSize="@dimen/y27" />
+                    <com.wuxiao.yourday.common.RichEditText.RichTextView
+                        android:id="@+id/diary_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/y60"
+                        android:layout_marginRight="@dimen/y60"
+                        android:visibility="gone" />
 
-                <ImageView
-                    android:id="@+id/weather_icon"
-                    android:layout_width="@dimen/x27"
-                    android:layout_height="@dimen/y60"
-                    android:layout_marginLeft="@dimen/y10" />
+                </LinearLayout>
 
 
             </LinearLayout>
+        </ScrollView>
 
+        <include
+            layout="@layout/bottom_toolbar" />
+    </RelativeLayout>
 
-            <LinearLayout
-                android:id="@+id/note_rich_linear"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <com.wuxiao.yourday.common.RichEditText.RichEditText
-                    android:id="@+id/note_rich"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="#fff" />
-
-
-                <com.wuxiao.yourday.common.RichEditText.RichTextView
-                    android:id="@+id/diary_content"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/y60"
-                    android:layout_marginRight="@dimen/y60"
-                    android:visibility="gone" />
-
-            </LinearLayout>
-
-
-        </LinearLayout>
-    </ScrollView>
-
-    <include layout="@layout/bottom_toolbar" />
-</RelativeLayout>
-
-
+</layout>

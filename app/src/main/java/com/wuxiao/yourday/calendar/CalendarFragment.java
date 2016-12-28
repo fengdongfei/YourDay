@@ -2,22 +2,21 @@ package com.wuxiao.yourday.calendar;
 
 
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import com.wuxiao.yourday.R;
 import com.wuxiao.yourday.base.BaseFragment;
 import com.wuxiao.yourday.base.IPresenter;
 import com.wuxiao.yourday.common.ThemeManager;
+import com.wuxiao.yourday.databinding.FragmentCalenderBinding;
 import com.wuxiao.yourday.home.HomeActivity;
 import com.wuxiao.yourday.setting.SettingActivity;
 import com.wuxiao.yourday.viewpager.FragmentVisibilityListener;
@@ -27,11 +26,11 @@ import com.wuxiao.yourday.viewpager.FragmentVisibilityListener;
  */
 public class CalendarFragment extends BaseFragment implements FragmentVisibilityListener, View.OnClickListener {
 
-    private RelativeLayout calender_linear;
     private FrameLayout calender;
     private LinearLayout buttom_toolbar;
     private ImageView compile;
     private ImageView set;
+    private FragmentCalenderBinding fragmentCalenderBinding;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,23 +45,21 @@ public class CalendarFragment extends BaseFragment implements FragmentVisibility
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View fragment = inflater.inflate(R.layout.fragment_calender, container, false);
-        calender_linear = (RelativeLayout) fragment.findViewById(R.id.calender_linear);
-        calender_linear.setBackground(ThemeManager.getInstance().getBgDrawable(getActivity()));
-        calender = (FrameLayout) fragment.findViewById(R.id.calender);
-        buttom_toolbar = (LinearLayout) fragment.findViewById(R.id.buttom_toolbar);
-
-        compile = (ImageView) fragment.findViewById(R.id.compile);
+        fragmentCalenderBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_calender, container, false);
+        calender = fragmentCalenderBinding.calender;
+        fragmentCalenderBinding.setSetThemeBg(ThemeManager.getInstance().getBgDrawable(getActivity()));
+        buttom_toolbar = (LinearLayout) fragmentCalenderBinding.getRoot().findViewById(R.id.buttom_toolbar);
+        compile = (ImageView) fragmentCalenderBinding.getRoot().findViewById(R.id.compile);
         compile.setVisibility(View.VISIBLE);
         compile.setOnClickListener(this);
-        set = (ImageView) fragment.findViewById(R.id.set);
+        set = (ImageView) fragmentCalenderBinding.getRoot().findViewById(R.id.set);
         set.setVisibility(View.VISIBLE);
         set.setOnClickListener(this);
         buttom_toolbar.setBackgroundColor(ThemeManager.getInstance().getThemeColor(getActivity()));
         CalendarWidget calendarWidget = new CalendarWidget(getActivity());
         calendarWidget.setTextColor(ThemeManager.getInstance().getThemeColor(getActivity()));
         calender.addView(calendarWidget);
-        return fragment;
+        return fragmentCalenderBinding.getRoot();
     }
 
     public static CalendarFragment newInstance() {

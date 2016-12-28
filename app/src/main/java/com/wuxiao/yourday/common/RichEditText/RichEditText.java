@@ -59,6 +59,8 @@ public class RichEditText extends ScrollView implements EditTextDataI {
      * 图文排序的时候，view默认缩小的高度
      */
     private final int SIZE_REDUCE_VIEW = dip2px(80);
+    private final int WIDTH = dip2px(280);
+    private final int HEIGHT = dip2px(400);
 
 
     /**
@@ -640,13 +642,14 @@ public class RichEditText extends ScrollView implements EditTextDataI {
 
     /**
      * 生成图片Layout
+     *
      * @param content
      */
     private RelativeLayout createImageLayout(String content) {
 
         RelativeLayout.LayoutParams contentImageLp = new RelativeLayout.LayoutParams(
                 LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-        SimpleDraweeView  simpleDraweeView = (SimpleDraweeView) inflater.inflate(R.layout.drawee_view,
+        SimpleDraweeView simpleDraweeView = (SimpleDraweeView) inflater.inflate(R.layout.drawee_view,
                 null);
         simpleDraweeView.setLayoutParams(contentImageLp);
 
@@ -655,11 +658,11 @@ public class RichEditText extends ScrollView implements EditTextDataI {
         layout.setTag(viewTagID++);
         setFocusOnView(layout, true);
 
-        int  bitmapWidth = getbitmapWidth(content);
-        int  bitmapHeight =getbitmapHeight(content);
-        if (getbitmapWidth(content)>width -width/3){
-            bitmapWidth =bitmapWidth -bitmapWidth/3;
-            bitmapHeight =bitmapHeight -bitmapHeight/3;
+        int bitmapWidth = getbitmapWidth(content);
+        int bitmapHeight = getbitmapHeight(content);
+        if (getbitmapWidth(content) > width - width / 3) {
+            bitmapWidth = WIDTH;
+            bitmapHeight = HEIGHT;
         }
         // 调整imageView的外边距
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
@@ -683,19 +686,21 @@ public class RichEditText extends ScrollView implements EditTextDataI {
         }
     }
 
-    public int getbitmapHeight(String content){
+    public int getbitmapHeight(String content) {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         Bitmap bitmap = BitmapFactory.decodeFile(content, options);
 
         return options.outHeight;
     }
-    public int getbitmapWidth(String content){
+
+    public int getbitmapWidth(String content) {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         Bitmap bitmap = BitmapFactory.decodeFile(content, options);
         return options.outWidth;
     }
+
     /**
      * 插入图片前的预处理
      */

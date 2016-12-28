@@ -50,22 +50,7 @@
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/pay_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textColor="@android:color/black"
-        android:padding="@dimen/y40"
-        android:text="打赏" />
 
-    <ImageView
-        android:id="@+id/pay"
-        android:visibility="gone"
-        android:layout_gravity="center"
-        android:src="@drawable/alipay"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 
 
 </LinearLayout>

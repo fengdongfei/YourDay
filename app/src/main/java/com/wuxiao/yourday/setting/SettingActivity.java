@@ -21,11 +21,9 @@ public class SettingActivity extends Activity implements View.OnClickListener {
 
     private ImageView theme_one;
     private ImageView theme_two;
-    private ImageView pay;
-    private TextView pay_text;
     private View titleView;
     private TextView tv_cancel_text;
-    private boolean status =true;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,9 +37,6 @@ public class SettingActivity extends Activity implements View.OnClickListener {
         titleView.setBackgroundColor(ThemeManager.getInstance().getThemeColor(this));
         theme_one = (ImageView) findViewById(R.id.theme_one);
         theme_two = (ImageView) findViewById(R.id.theme_two);
-        pay = (ImageView) findViewById(R.id.pay);
-        pay_text = (TextView) findViewById(R.id.pay_text);
-        pay_text.setOnClickListener(this);
         theme_one.setOnClickListener(this);
         theme_two.setOnClickListener(this);
 
@@ -60,15 +55,6 @@ public class SettingActivity extends Activity implements View.OnClickListener {
                 break;
             case R.id.tv_cancel:
                 onBackPressed();
-                break;
-            case R.id.pay_text:
-                if (status) {
-                    status =false;
-                    pay.setVisibility(View.VISIBLE);
-                }else{
-                    status=true;
-                    pay.setVisibility(View.GONE);
-                }
                 break;
             default:
                 break;

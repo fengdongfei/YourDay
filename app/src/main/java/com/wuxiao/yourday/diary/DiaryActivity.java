@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
@@ -22,6 +23,7 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationListener;
 import com.wuxiao.yourday.R;
 import com.wuxiao.yourday.base.BaseActivity;
+import com.wuxiao.yourday.bean.DiaryTime;
 import com.wuxiao.yourday.bean.Note;
 import com.wuxiao.yourday.bean.WeatherItem;
 import com.wuxiao.yourday.common.AMapLocationManager;
@@ -32,6 +34,7 @@ import com.wuxiao.yourday.common.ThemeManager;
 import com.wuxiao.yourday.common.photo.PhotoPickerActivity;
 import com.wuxiao.yourday.common.popup.WeatherCallBack;
 import com.wuxiao.yourday.common.popup.WeatherPopup;
+import com.wuxiao.yourday.databinding.ActivityDiaryBinding;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -49,16 +52,9 @@ public class DiaryActivity extends BaseActivity<DiaryPresenter> implements Diary
         , TimePickerDialog.OnTimeSetListener, WeatherCallBack, AMapLocationListener {
     public static final int REQUEST_PHOTO = 0x0023;
     private SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-    private LinearLayout diary_time_information;
-    private TextView diary_month;
-    private TextView diary_date;
-    private TextView diary_day;
-    private TextView diary_time;
     private TextView diary_location;
     private LinearLayout buttom_toolbar;
-
     private RichTextView diary_content;
-    private LinearLayout diary_location_status;
     private ImageView save;
     private ImageView input;
     private ImageView photo;
@@ -75,22 +71,20 @@ public class DiaryActivity extends BaseActivity<DiaryPresenter> implements Diary
     private AMapLocationClient client;
     private StringBuilder update_location;
     private String lastLocation;
+    private ActivityDiaryBinding activityDiaryBinding;
+    private LinearLayout diary_time_information;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_diary);
+        activityDiaryBinding = DataBindingUtil.setContentView(this, R.layout.activity_diary);
+        activityDiaryBinding.setCalendarColor(ThemeManager.getInstance().getThemeColor(this));
         findViewById(R.id.shadow_view).setVisibility(View.GONE);
         Bundle bundle = getIntent().getExtras();
         noteid = bundle.getLong("noteId");
         weatherList = getMenu(this);
         weatherPopup = new WeatherPopup(this, this);
-        diary_time_information = (LinearLayout) findViewById(R.id.diary_time_information);
-        diary_month = (TextView) findViewById(R.id.diary_month);
-        diary_date = (TextView) findViewById(R.id.diary_date);
-        diary_day = (TextView) findViewById(R.id.diary_day);
-        diary_time = (TextView) findViewById(R.id.diary_time);
         note_rich = (RichEditText) findViewById(R.id.note_rich);
         note_back = (FrameLayout) findViewById(R.id.note_back);
         note_back.setVisibility(View.VISIBLE);
@@ -100,7 +94,6 @@ public class DiaryActivity extends BaseActivity<DiaryPresenter> implements Diary
         weather_icon = (ImageView) findViewById(R.id.weather_icon);
         weather_icon.setOnClickListener(this);
         weather_icon.setImageResource(weatherList.get(0).icon);
-        diary_location_status = (LinearLayout) findViewById(R.id.diary_location_status);
         save = (ImageView) findViewById(R.id.save);
         save.setOnClickListener(this);
         location = (ImageView) findViewById(R.id.location);
@@ -117,10 +110,9 @@ public class DiaryActivity extends BaseActivity<DiaryPresenter> implements Diary
         del.setOnClickListener(this);
         buttom_toolbar = (LinearLayout) findViewById(R.id.buttom_toolbar);
         buttom_toolbar.setBackgroundColor(ThemeManager.getInstance().getThemeColor(this));
+        diary_time_information = (LinearLayout) findViewById(R.id.diary_time_information);
         diary_time_information.setOnClickListener(this);
         diary_content.setTitleColor(ThemeManager.getInstance().getThemeColor(this));
-        diary_time_information.setBackgroundColor(ThemeManager.getInstance().getThemeColor(this));
-        diary_location_status.setBackgroundColor(ThemeManager.getInstance().getThemeColor(this));
         viewEnabled(false);
         client = AMapLocationManager.getInstance(this.getApplication());
         client.setLocationListener(this);
@@ -136,11 +128,14 @@ public class DiaryActivity extends BaseActivity<DiaryPresenter> implements Diary
             long time = note.getCreateTime();
             calendar.setTimeInMillis(time);
         }
-        diary_month.setText(timeUtils.getMonth()[calendar.get(Calendar.MONTH)]);
-        diary_date.setText(String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)));
-        diary_day.setText(timeUtils.getDays()[calendar.get(Calendar.DAY_OF_WEEK) - 1]);
-        diary_time.setText(sdf.format(calendar.getTime()));
+        DiaryTime diaryTime = new DiaryTime();
+        diaryTime.setMonth(timeUtils.getMonth()[calendar.get(Calendar.MONTH)]);
+        diaryTime.setTime(sdf.format(calendar.getTime()));
+        diaryTime.setDate(String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)));
+        diaryTime.setDay(timeUtils.getDays()[calendar.get(Calendar.DAY_OF_WEEK) - 1]);
+        activityDiaryBinding.setDiaryTime(diaryTime);
     }
+
 
     private void viewEnabled(boolean enabled) {
         this.enabled = enabled;

@@ -38,7 +38,8 @@ public class RichTextView extends ScrollView {
     private Context context;
     private int width;
     private int height;
-
+    private final int WIDTH = dip2px(280);
+    private final int HEIGHT = dip2px(400);
     public RichTextView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
@@ -130,6 +131,10 @@ public class RichTextView extends ScrollView {
         return textView;
     }
 
+    /**
+     * 生成图片Layout
+     * @param content
+     */
     private RelativeLayout createImageLayout(String content) {
 
         RelativeLayout.LayoutParams contentImageLp = new RelativeLayout.LayoutParams(
@@ -146,8 +151,8 @@ public class RichTextView extends ScrollView {
         int  bitmapWidth = getbitmapWidth(content);
         int  bitmapHeight =getbitmapHeight(content);
         if (getbitmapWidth(content)>width -width/3){
-            bitmapWidth =bitmapWidth -bitmapWidth/3;
-            bitmapHeight =bitmapHeight -bitmapHeight/3;
+            bitmapWidth =WIDTH;
+            bitmapHeight =HEIGHT;
         }
         // 调整imageView的外边距
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
