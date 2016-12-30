@@ -23,6 +23,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Scroller;
 
+import com.wuxiao.yourday.R;
 import com.wuxiao.yourday.common.Global;
 
 
@@ -45,7 +46,7 @@ public abstract class BaseCalenderView extends View {
     public BaseCalenderView(Context context) {
         super(context);
         mScreenWidth = Global.getScreenWidth(context);
-        mScreenHeight = Global.getScreenHeight(context) / 2;
+        mScreenHeight =(int)context.getResources().getDimension(R.dimen.y600);
 
         mCurPageBitmap = Bitmap.createBitmap(mScreenWidth, mScreenHeight, Bitmap.Config.ARGB_8888);
         mNextPageBitmap = Bitmap.createBitmap(mScreenWidth, mScreenHeight, Bitmap.Config.ARGB_8888);
@@ -117,6 +118,7 @@ public abstract class BaseCalenderView extends View {
                 this.postInvalidate();
                 break;
             case MotionEvent.ACTION_UP:
+
             case MotionEvent.ACTION_CANCEL:
 
                 long t = System.currentTimeMillis();

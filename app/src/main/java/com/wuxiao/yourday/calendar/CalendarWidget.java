@@ -18,6 +18,7 @@ package com.wuxiao.yourday.calendar;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Matrix;
@@ -267,21 +268,22 @@ public class CalendarWidget extends BaseCalenderView {
      * 创建阴影的GradientDrawable
      */
     private void createDrawable() {
-        int[] color = {0x333333, 0xb0333333};
+
+        int[] color = {   Color.TRANSPARENT,    Color.TRANSPARENT};
         mFolderShadowDrawableRL = new GradientDrawable(GradientDrawable.Orientation.RIGHT_LEFT, color);
         mFolderShadowDrawableRL.setGradientType(GradientDrawable.LINEAR_GRADIENT);
 
         mFolderShadowDrawableLR = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, color);
         mFolderShadowDrawableLR.setGradientType(GradientDrawable.LINEAR_GRADIENT);
 
-        mBackShadowColors = new int[]{0xff111111, 0x111111};
+        mBackShadowColors = new int[]{   Color.TRANSPARENT,    Color.TRANSPARENT};
         mBackShadowDrawableRL = new GradientDrawable(GradientDrawable.Orientation.RIGHT_LEFT, mBackShadowColors);
         mBackShadowDrawableRL.setGradientType(GradientDrawable.LINEAR_GRADIENT);
 
         mBackShadowDrawableLR = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, mBackShadowColors);
         mBackShadowDrawableLR.setGradientType(GradientDrawable.LINEAR_GRADIENT);
 
-        mFrontShadowColors = new int[]{0x80111111, 0x111111};
+        mFrontShadowColors = new int[]{Color.TRANSPARENT, Color.TRANSPARENT};
         mFrontShadowDrawableVLR = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, mFrontShadowColors);
         mFrontShadowDrawableVLR.setGradientType(GradientDrawable.LINEAR_GRADIENT);
         mFrontShadowDrawableVRL = new GradientDrawable(GradientDrawable.Orientation.RIGHT_LEFT, mFrontShadowColors);
