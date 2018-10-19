@@ -8,6 +8,8 @@ import android.os.Build;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 
+import static android.content.Context.MODE_PRIVATE;
+
 /**
  * Created by wuxiaojian on 16/12/7.
  */
@@ -57,12 +59,12 @@ public class Global {
 
 
     public static int getTheme(Context context) {
-        SharedPreferences settings = context.getSharedPreferences(NOTE_SP, 1);
+        SharedPreferences settings = context.getSharedPreferences(NOTE_SP, MODE_PRIVATE);
         return settings.getInt(CURRENTTHEME, ThemeManager.THEME_ONE);
     }
 
     public static void setTheme(Context context, int theme) {
-        SharedPreferences settings = context.getSharedPreferences(NOTE_SP, 1);
+        SharedPreferences settings = context.getSharedPreferences(NOTE_SP, MODE_PRIVATE);
         SharedPreferences.Editor PE = settings.edit();
         PE.putInt(CURRENTTHEME, theme);
         PE.commit();

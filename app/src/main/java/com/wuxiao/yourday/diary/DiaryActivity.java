@@ -1,5 +1,7 @@
 package com.wuxiao.yourday.diary;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
@@ -21,6 +23,7 @@ import android.widget.Toast;
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationListener;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.wuxiao.yourday.R;
 import com.wuxiao.yourday.base.BaseActivity;
 import com.wuxiao.yourday.bean.DiaryTime;
@@ -40,6 +43,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 import rx.Observable;
 import rx.functions.Action1;
 
@@ -214,7 +219,7 @@ public class DiaryActivity extends BaseActivity<DiaryPresenter> implements Diary
             }
         });
         String title = note_rich.getTitleData();
-        long createTime =   System.currentTimeMillis();
+        long createTime = System.currentTimeMillis();
 
         if (!TextUtils.isEmpty(title) && !TextUtils.isEmpty(content)) {
             if (update_location != null) {

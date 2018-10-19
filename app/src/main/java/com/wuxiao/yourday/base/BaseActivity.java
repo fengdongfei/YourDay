@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 
 
+import com.umeng.analytics.MobclickAgent;
 import com.wuxiao.yourday.common.TimeUtils;
 
 import java.util.Calendar;
@@ -29,6 +30,17 @@ public abstract class BaseActivity<T extends IPresenter> extends FragmentActivit
         mPresenter = getPresenter();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
 
     @Override
     protected void onDestroy() {
